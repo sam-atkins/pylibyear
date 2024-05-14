@@ -13,19 +13,32 @@ https://libyear.com/
 ![Demo Image](./docs/demo.png)
 
 ## How to install
-`pip install libyear`
 
+```bash
+pip install libyear
+```
 
 ## Usage
-A single requirement file
-`libyear -r requirements.txt`
 
-A folder with requirement files
-`libyear -r requirements/`
+```bash
+libyear --help
+```
+
+A requirement text file
+
+```bash
+libyear text requirements.txt
+```
+
+A pyproject.toml file
+
+```bash
+libyear toml pyproject.toml
+```
 
 ## Example output
 ```
-libyear -r requirements.txt
+libyear text requirements.txt
 +-------------------------+-----------------+----------------+-----------------+
 |         Library         | Current Version | Latest Version | Libyears behind |
 +-------------------------+-----------------+----------------+-----------------+
