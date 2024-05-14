@@ -1,14 +1,12 @@
-import argparse
 import os
-import sys
-from importlib.machinery import SourceFileLoader
-from importlib.util import module_from_spec, spec_from_loader
 from pathlib import Path
-from unittest import mock
 
 import pytest
+from typer.testing import CliRunner
 
-from libyear import main
+from libyear.main import app
+
+# runner = CliRunner()
 
 
 @pytest.fixture(scope="module")
@@ -25,17 +23,21 @@ def vcr_cassette_dir(request):
 @pytest.mark.vcr()
 def test_libyear_main_output(capsys):
     requirements_path = str(Path(__file__).parent / "data" / "requirements.txt")
+    runner = CliRunner()
+    result = runner.invoke(
+        app,
+        [
+            "text",
+            requirements_path,
+            "--sort",
+        ],
+    )
 
-    with mock.patch(
-        "libyear.main.argparse.ArgumentParser.parse_args",
-        return_value=argparse.Namespace(r=requirements_path, sort=False),
-    ):
-        main.main()
-
-    out, err = capsys.readouterr()
+    out = result.stdout
     out_lst = out.split("\n")
 
-    assert err == ""
+    assert result.exit_code == 0
+
     assert (
         out_lst[0:3]
         == """\
