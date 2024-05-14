@@ -3,4 +3,7 @@ __pycache__
 build
 dist
 libyear.egg-info
+pylibyear.egg-info
 .eggs
+
+.python-version
