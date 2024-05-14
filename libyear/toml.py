@@ -59,7 +59,6 @@ def load_requirements_from_toml(file_path) -> list[str]:
                 new_lib = f"{_replace_pyproject_constraints(dep)} \\"
                 libraries.append(new_lib)
 
-    print(f"libraries: {libraries}")
     return libraries
 
 
