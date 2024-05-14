@@ -5,7 +5,7 @@ Module for parsing pyproject.toml files
 import tomllib
 
 
-def get_libraries_from_toml_file(file_path):
+def load_requirements_from_toml(file_path) -> list[str]:
     """
     Get the libraries from a pyproject.toml file
     """
@@ -18,19 +18,15 @@ def get_libraries_from_toml_file(file_path):
         for key, value in prod_deps.items():
             if key == "python":
                 continue
-            new_lib = {
-                "name": key,
-                "version": _strip_poetry_version_constraints(value),
-            }
+            version = _strip_poetry_version_constraints(value)
+            new_lib = f"{key}=={version} \\"
             libraries.append(new_lib)
 
     dev_deps = data.get("tool", {}).get("poetry", {}).get("dev-dependencies", {})
     if dev_deps:
         for key, value in dev_deps.items():
-            new_lib = {
-                "name": key,
-                "version": _strip_poetry_version_constraints(value),
-            }
+            version = _strip_poetry_version_constraints(value)
+            new_lib = f"{key}=={version} \\"
             libraries.append(new_lib)
 
     group_dev_deps = (
@@ -42,10 +38,8 @@ def get_libraries_from_toml_file(file_path):
     )
     if group_dev_deps:
         for key, value in group_dev_deps.items():
-            new_lib = {
-                "name": key,
-                "version": _strip_poetry_version_constraints(value),
-            }
+            version = _strip_poetry_version_constraints(value)
+            new_lib = f"{key}=={version} \\"
             libraries.append(new_lib)
 
     return libraries

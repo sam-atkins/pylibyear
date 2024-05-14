@@ -91,12 +91,12 @@ J. Cox, E. Bouwers, M. van Eekelen and J. Visser, Measuring Dependency Freshness
 
 To install dependencies
 
-```
+```bash
 uv pip install -r pyproject.toml --all-extras
 ```
 
-To install in editable mode
+Then run this command to install in editable mode for local development
 
-```
+```bash
 uv pip install -e .
 ```
