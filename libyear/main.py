@@ -3,6 +3,7 @@ from prettytable import PrettyTable
 from typing_extensions import Annotated
 
 from libyear.pypi import get_lib_days
+from libyear.toml import get_libraries_from_toml_file
 from libyear.utils import (
     get_requirement_name_and_version,
     load_requirements,
@@ -50,6 +51,18 @@ def text(
     else:
         print(pt)
         print("Your system is %s libyears behind" % str(round(total_days / 365, 2)))
+
+
+@app.command()
+def poetry(
+    pyproject: Annotated[str, typer.Argument(help="Poetry pyproject.toml path")],
+    sort: Annotated[
+        bool, typer.Option(help="Sort by years behind, in descending order")
+    ] = False,
+):
+    print("Placeholder for poetry command")
+    print(f"pyproject.toml path: {pyproject}")
+    get_libraries_from_toml_file(pyproject)
 
 
 if __name__ == "__main__":
