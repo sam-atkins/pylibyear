@@ -4,7 +4,7 @@
 [![GitHub contributors](https://img.shields.io/github/contributors/nasirhjafri/libyear.svg)](https://GitHub.com/nasirhjafri/libyear/graphs/contributors/)
 
 
-# libyear 
+# libyear
 
 A **simple** measure of software dependency freshness. It is a **single number** telling you how up-to-date your dependencies are.
 
@@ -13,19 +13,32 @@ https://libyear.com/
 ![Demo Image](./docs/demo.png)
 
 ## How to install
-`pip install libyear`
 
+```bash
+pip install libyear
+```
 
 ## Usage
-A single requirement file
-`libyear -r requirements.txt`
 
-A folder with requirement files
-`libyear -r requirements/`
+```bash
+libyear --help
+```
+
+A requirement text file
+
+```bash
+libyear text requirements.txt
+```
+
+A pyproject.toml file
+
+```bash
+libyear toml pyproject.toml
+```
 
 ## Example output
 ```
-libyear -r requirements.txt 
+libyear text requirements.txt
 +-------------------------+-----------------+----------------+-----------------+
 |         Library         | Current Version | Latest Version | Libyears behind |
 +-------------------------+-----------------+----------------+-----------------+
@@ -86,3 +99,17 @@ Apps below 10 libyears are considered to be healthy apps. We regularly rescue pr
 
 ## References
 J. Cox, E. Bouwers, M. van Eekelen and J. Visser, Measuring Dependency Freshness in Software Systems. In Proceedings of the 37th International Conference on Software Engineering (ICSE 2015), May 2015 https://ericbouwers.github.io/papers/icse15.pdf
+
+## Dev
+
+To install dependencies
+
+```bash
+uv pip install -r pyproject.toml --all-extras
+```
+
+Then run this command to install in editable mode for local development
+
+```bash
+uv pip install -e .
+```

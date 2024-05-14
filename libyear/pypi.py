@@ -1,7 +1,6 @@
-from distutils.version import LooseVersion
-
 import dateutil.parser
 import requests
+from packaging.version import Version
 
 
 def get_pypi_data(name, version=None):
@@ -16,8 +15,8 @@ def get_pypi_data(name, version=None):
 
 
 def clean_version(version):
-    version = [v for v in version if v.isdigit() or v == '.']
-    return ''.join(version)
+    version = [v for v in version if v.isdigit() or v == "."]
+    return "".join(version)
 
 
 def get_version(pypi_data, version, lt=False):
@@ -25,18 +24,20 @@ def get_version(pypi_data, version, lt=False):
         return None
 
     orig_ver = version
-    releases = pypi_data['releases']
+    releases = pypi_data["releases"]
     if version not in releases:
-        version_data = get_pypi_data(pypi_data['info']['name'], version=version)
-        version = version_data.get('info', {}).get('version')
+        version_data = get_pypi_data(pypi_data["info"]["name"], version=version)
+        version = version_data.get("info", {}).get("version")
     if lt:
-        releases = [(r, rd[-1]['upload_time_iso_8601']) for r, rd in releases.items() if rd]
+        releases = [
+            (r, rd[-1]["upload_time_iso_8601"]) for r, rd in releases.items() if rd
+        ]
         releases = sorted(releases, key=lambda x: x[1], reverse=True)
         releases = [r for r, rd in releases]
         if version is None:
-            curr_ver = LooseVersion(clean_version(orig_ver))
+            curr_ver = Version(clean_version(orig_ver))
             releases_float = [clean_version(r) for r in releases]
-            releases_float = [r for r in releases_float if LooseVersion(r) >= curr_ver]
+            releases_float = [r for r in releases_float if Version(r) >= curr_ver]
             return releases[len(releases_float)]
 
         idx = releases.index(version)
@@ -44,22 +45,24 @@ def get_version(pypi_data, version, lt=False):
             return releases[idx + 1]
     return version
 
+
 def get_no_of_releases(name, version):
     pypi_data = get_pypi_data(name)
     if not pypi_data:
         return None, None, None, None
 
-    releases = pypi_data['releases']
-    
-    return (len(releases)-list(releases).index(version))
+    releases = pypi_data["releases"]
+
+    return len(releases) - list(releases).index(version)
+
 
 def get_version_release_dates(name, version, version_lt):
     pypi_data = get_pypi_data(name)
     if not pypi_data:
         return None, None, None, None
 
-    releases = pypi_data['releases']
-    latest_version = pypi_data['info']['version']
+    releases = pypi_data["releases"]
+    latest_version = pypi_data["info"]["version"]
     if version_lt:
         version = get_version(pypi_data, version_lt, lt=True)
 
@@ -68,9 +71,9 @@ def get_version_release_dates(name, version, version_lt):
         return None, None, None, None
 
     try:
-        latest_version_date = releases[latest_version][-1]['upload_time_iso_8601']
+        latest_version_date = releases[latest_version][-1]["upload_time_iso_8601"]
     except IndexError:
-        print(f'Latest version of {name!r} has no upload time.')
+        print(f"Latest version of {name!r} has no upload time.")
         return None, None, None, None
 
     latest_version_date = dateutil.parser.parse(latest_version_date)
@@ -78,9 +81,9 @@ def get_version_release_dates(name, version, version_lt):
         return None, latest_version_date, latest_version, latest_version_date
 
     try:
-        version_date = releases[version][-1]['upload_time_iso_8601']
+        version_date = releases[version][-1]["upload_time_iso_8601"]
     except IndexError:
-        print(f'Used release of {name}=={version} has no upload time.')
+        print(f"Used release of {name}=={version} has no upload time.")
         return None, None, None, None
 
     version_date = dateutil.parser.parse(version_date)
@@ -88,6 +91,8 @@ def get_version_release_dates(name, version, version_lt):
 
 
 def get_lib_days(name, version, version_lt):
-    v, cr, lv, lr = get_version_release_dates(name, version, version_lt)
-    libdays = (lr - cr).days if cr else 0
-    return v, lv, libdays
+    version, version_date, latest_version, latest_version_date = (
+        get_version_release_dates(name, version, version_lt)
+    )
+    libdays = (latest_version_date - version_date).days if version_date else 0
+    return version, latest_version, libdays

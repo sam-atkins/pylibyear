@@ -1,9 +1,8 @@
-import os
 import re
 
-REQUIREMENT_NAME_RE = r'^([^=><]+)'
-REQUIREMENT_VERSION_LT_RE = r'<([^$,]*)'
-REQUIREMENT_VERSION_LTE_RE = r'[<=]=([^$,]*)'
+REQUIREMENT_NAME_RE = r"^([^=><]+)"
+REQUIREMENT_VERSION_LT_RE = r"<([^$,]*)"
+REQUIREMENT_VERSION_LTE_RE = r"[<=]=([^$,]*)"
 
 
 def get_requirement_name_and_version(requirement):
@@ -27,15 +26,6 @@ def get_requirement_name_and_version(requirement):
     return name[0], None, version_lt[0]
 
 
-def get_requirement_files(path_or_file):
-    if os.path.isfile(path_or_file):
-        yield path_or_file
-        return
-    for path, subdirs, files in os.walk(path_or_file):
-        for name in files:
-            yield os.path.join(path, name)
-
-
 def is_requirement(line):
     """
     Return True if the requirement line is a package requirement;
@@ -46,24 +36,24 @@ def is_requirement(line):
 
     # Skip blank lines, comments, and editable installs
     return not (
-            line == '' or
-            line.startswith('-r') or
-            line.startswith('#') or
-            line.startswith('-e') or
-            line.startswith('git+') or
-            line.startswith('--')
+        line == ""
+        or line.startswith("-r")
+        or line.startswith("#")
+        or line.startswith("-e")
+        or line.startswith("git+")
+        or line.startswith("--")
     )
 
 
-def load_requirements(*requirements_paths):
+def load_requirements(requirement_path):
     """
-    Load all requirements from the specified requirements files.
+    Load all requirements from the specified requirements file.
     Returns a list of requirement strings.
     """
     requirements = set()
-    for path in requirements_paths:
-        requirements.update(
-            line.strip() for line in open(path).readlines()
-            if is_requirement(line)
-        )
+    requirements.update(
+        line.strip()
+        for line in open(requirement_path).readlines()
+        if is_requirement(line)
+    )
     return list(requirements)

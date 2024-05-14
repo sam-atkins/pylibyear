@@ -1,60 +1,54 @@
-import argparse
 import os
-import sys
-from importlib.machinery import SourceFileLoader
-from importlib.util import module_from_spec, spec_from_loader
 from pathlib import Path
-from unittest import mock
 
 import pytest
+from typer.testing import CliRunner
+
+from libyear.main import app
+
+# runner = CliRunner()
 
 
-def load_libyear_module():
-    """ As the module has no extension, this workaround is needed to load """
-    libyear_path = str(Path(__file__).parent.parent / "libyear/libyear")
-    spec = spec_from_loader("libyear", SourceFileLoader("libyear", libyear_path))
-    libyear = module_from_spec(spec)
-    spec.loader.exec_module(libyear)
-    sys.modules['libyear'] = libyear
-    return libyear
-
-
-libyear = load_libyear_module()
-
-
-@pytest.fixture(scope='module')
+@pytest.fixture(scope="module")
 def vcr_config():
-    return {
-        'decode_compressed_response': True
-    }
+    return {"decode_compressed_response": True}
 
 
-@pytest.fixture(scope='module')
+@pytest.fixture(scope="module")
 def vcr_cassette_dir(request):
     # Put all cassettes in tests/cassettes/{module}/{test}.yaml
-    return os.path.join('tests/cassettes/', request.module.__name__)
+    return os.path.join("tests/cassettes/", request.module.__name__)
 
 
 @pytest.mark.vcr()
 def test_libyear_main_output(capsys):
-    requirements_path = str(Path(__file__).parent / 'data' / 'requirements.txt')
+    requirements_path = str(Path(__file__).parent / "data" / "requirements.txt")
+    runner = CliRunner()
+    result = runner.invoke(
+        app,
+        [
+            "text",
+            requirements_path,
+            "--sort",
+        ],
+    )
 
-    with mock.patch(
-        'libyear.argparse.ArgumentParser.parse_args',
-        return_value=argparse.Namespace(r=requirements_path, sort=False)
-    ):
-        libyear.main()
-
-    out, err = capsys.readouterr()
+    out = result.stdout
     out_lst = out.split("\n")
 
-    assert err == ''
-    assert out_lst[0:3] == '''\
+    assert result.exit_code == 0
+
+    assert (
+        out_lst[0:3]
+        == """\
 +-------------------+-----------------+----------------+-----------------+
 |      Library      | Current Version | Latest Version | Libyears behind |
-+-------------------+-----------------+----------------+-----------------+'''.split("\n")
++-------------------+-----------------+----------------+-----------------+""".split(
+            "\n"
+        )
+    )
 
-    ref_lst = '''\
+    ref_lst = """\
 |     pyparsing     |      2.4.5      |     2.4.7      |       0.4       |
 |      pathspec     |      0.6.0      |     0.8.1      |       1.1       |
 |     packaging     |       19.2      |      20.8      |       1.23      |
@@ -89,7 +83,7 @@ def test_libyear_main_output(capsys):
 | typing-extensions |     3.7.4.1     |    3.7.4.3     |       0.82      |
 |        cfgv       |      2.0.1      |     3.2.0      |       1.03      |
 |    pycodestyle    |      2.5.0      |     2.6.0      |       1.28      |\
-'''.split('\n')
+""".split("\n")
 
     def table_sort(s):
         """remove `|` + any spaces, in order to get alphabetic sort of first column"""
@@ -97,7 +91,10 @@ def test_libyear_main_output(capsys):
 
     assert sorted(out_lst[3:-3], key=table_sort) == sorted(ref_lst, key=table_sort)
 
-    assert out_lst[-3:] == '''\
+    assert (
+        out_lst[-3:]
+        == """\
 +-------------------+-----------------+----------------+-----------------+
 Your system is 47.2 libyears behind
-'''.split('\n')
+""".split("\n")
+    )
