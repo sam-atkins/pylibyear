@@ -91,6 +91,8 @@ def get_version_release_dates(name, version, version_lt):
 
 
 def get_lib_days(name, version, version_lt):
-    v, cr, lv, lr = get_version_release_dates(name, version, version_lt)
-    libdays = (lr - cr).days if cr else 0
-    return v, lv, libdays
+    version, version_date, latest_version, latest_version_date = (
+        get_version_release_dates(name, version, version_lt)
+    )
+    libdays = (latest_version_date - version_date).days if version_date else 0
+    return version, latest_version, libdays
