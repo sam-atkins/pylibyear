@@ -1,6 +1,6 @@
 [![made-with-python](https://img.shields.io/badge/Made%20with-Python-1f425f.svg)](https://www.python.org/)
 [![Open Source Love svg1](https://badges.frapsoft.com/os/v1/open-source.svg?v=103)](https://github.com/sam-atkins/pylibyear/)
-[![PyPI version fury.io](https://badge.fury.io/py/libyear.svg)](https://pypi.python.org/pypi/pylibyear/)
+[![PyPI version fury.io](https://badge.fury.io/py/pylibyear.svg)](https://pypi.python.org/pypi/pylibyear/)
 
 **This is a fork of [libyear](https://github.com/nasirhjafri/libyear) as it appears to no longer be maintained.**
 
