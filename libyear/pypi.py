@@ -5,9 +5,9 @@ from packaging.version import Version
 
 def get_pypi_data(name, version=None):
     """return a dictionary with pypi project data"""
-    url = "https://pypi.org/pypi/%s/json" % name
+    url = f"https://pypi.org/pypi/{name}/json"
     if version:
-        url = "https://pypi.org/pypi/%s/%s/json" % (name, version)
+        url = f"https://pypi.org/pypi/{name}/{version}/json"
     r = requests.get(url)
     if r.status_code < 400:
         return r.json()
