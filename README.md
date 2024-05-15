@@ -1,10 +1,10 @@
 [![made-with-python](https://img.shields.io/badge/Made%20with-Python-1f425f.svg)](https://www.python.org/)
-[![Open Source Love svg1](https://badges.frapsoft.com/os/v1/open-source.svg?v=103)](https://github.com/nasirhjafri/libyear/)
-[![PyPI version fury.io](https://badge.fury.io/py/libyear.svg)](https://pypi.python.org/pypi/libyear/)
-[![GitHub contributors](https://img.shields.io/github/contributors/nasirhjafri/libyear.svg)](https://GitHub.com/nasirhjafri/libyear/graphs/contributors/)
+[![Open Source Love svg1](https://badges.frapsoft.com/os/v1/open-source.svg?v=103)](https://github.com/sam-atkins/pylibyear/)
+[![PyPI version fury.io](https://badge.fury.io/py/libyear.svg)](https://pypi.python.org/pypi/pylibyear/)
 
+**This is a fork of [libyear](https://github.com/nasirhjafri/libyear) as it appears to no longer be maintained.**
 
-# libyear
+# [py]libyear
 
 A **simple** measure of software dependency freshness. It is a **single number** telling you how up-to-date your dependencies are.
 
@@ -14,8 +14,16 @@ https://libyear.com/
 
 ## How to install
 
+Using pip
+
 ```bash
-pip install libyear
+pip install pylibyear
+```
+
+Using pipx
+
+```bash
+pipx install pylibyear
 ```
 
 ## Usage
