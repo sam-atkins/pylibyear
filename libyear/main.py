@@ -1,6 +1,9 @@
+from typing import Optional
+
 import typer
 from typing_extensions import Annotated
 
+from libyear.__about__ import __version__
 from libyear.results import print_results_table
 from libyear.toml import load_requirements_from_toml
 from libyear.utils import (
@@ -8,6 +11,24 @@ from libyear.utils import (
 )
 
 app = typer.Typer()
+
+
+def version_callback(value: bool):
+    if value:
+        print(f"libyear version: {__version__}")
+        raise typer.Exit()
+
+
+@app.callback(invoke_without_command=True)
+def main(
+    version: Optional[bool] = typer.Option(
+        None, "--version", callback=version_callback, is_eager=True
+    ),
+):
+    """
+    A simple measure of software dependency freshness.
+    """
+    ...
 
 
 @app.command()
