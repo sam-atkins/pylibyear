@@ -57,3 +57,11 @@ tasks:
     cmds:
       - rm -rf dist/**
       - python -m build
+
+  bump:
+    desc: "{{ .DESC }}"
+    summary: "{{ .DESC }}"
+    vars:
+      DESC: Bump the version in ``libyear/__about__.py``
+    cmds:
+      - python scripts/version_bump.py
