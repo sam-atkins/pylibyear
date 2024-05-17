@@ -6,8 +6,6 @@ from typer.testing import CliRunner
 
 from libyear.main import app
 
-# runner = CliRunner()
-
 
 @pytest.fixture(scope="module")
 def vcr_config():
@@ -21,7 +19,7 @@ def vcr_cassette_dir(request):
 
 
 @pytest.mark.vcr()
-def test_libyear_main_output(capsys):
+def test_libyear_main_output():
     requirements_path = str(Path(__file__).parent / "data" / "requirements.txt")
     runner = CliRunner()
     result = runner.invoke(
