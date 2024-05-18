@@ -1,4 +1,8 @@
+import os
 import re
+from pathlib import Path
+
+import typer
 
 REQUIREMENT_NAME_RE = r"^([^=><]+)"
 REQUIREMENT_VERSION_LT_RE = r"<([^$,]*)"
@@ -57,3 +61,14 @@ def load_requirements(requirement_path):
         if is_requirement(line)
     )
     return list(requirements)
+
+
+def validate_file_path(file_path: str | Path):
+    """
+    Validate the file path exists and is a file.
+    """
+    if not os.path.exists(file_path):
+        raise typer.BadParameter(f"File not found: {file_path}")
+    if not os.path.isfile(file_path):
+        raise typer.BadParameter(f"Not a file: {file_path}")
+    return file_path
