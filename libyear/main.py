@@ -12,6 +12,7 @@ from libyear.results import (
 from libyear.toml import load_requirements_from_toml
 from libyear.utils import (
     load_requirements,
+    validate_file_path,
 )
 
 app = typer.Typer()
@@ -86,6 +87,8 @@ def render_results(json: str, sort: bool, requirements: set) -> None:
     """
     Render the results to the console or to a file
     """
+    if json:
+        validate_file_path(json)
     data = calculate_results(requirements, sort)
     if json:
         results_to_json(data=data, file_name=json)
