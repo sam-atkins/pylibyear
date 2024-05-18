@@ -1,4 +1,6 @@
+import json
 import os
+import tempfile
 from pathlib import Path
 
 import pytest
@@ -96,3 +98,26 @@ def test_libyear_main_output():
 Your system is 47.2 libyears behind
 """.split("\n")
     )
+
+
+@pytest.mark.vcr()
+def test_libyear_main_output_to_json():
+    tmp_file = tempfile.NamedTemporaryFile()
+    requirements_path = str(Path(__file__).parent / "data" / "requirements.txt")
+    runner = CliRunner()
+    result = runner.invoke(
+        app,
+        [
+            "text",
+            requirements_path,
+            "--json",
+            tmp_file.name,
+        ],
+    )
+
+    assert result.exit_code == 0
+    with open(tmp_file.name, "r") as f:
+        json_data = f.read()
+        data = json.loads(json_data)
+        assert data["total_libyears_behind"] == "169.35"
+        assert len(data["libraries"]) == 38
