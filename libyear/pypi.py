@@ -1,17 +1,18 @@
 import dateutil.parser
-import requests
+from httpx import HTTPStatusError
 from packaging.version import Version
 
+async def get_pypi_data(name, version=None):
+    from .main import client
 
-def get_pypi_data(name, version=None):
     """return a dictionary with pypi project data"""
     url = f"https://pypi.org/pypi/{name}/json"
     if version:
         url = f"https://pypi.org/pypi/{name}/{version}/json"
-    r = requests.get(url)
-    if r.status_code < 400:
-        return r.json()
-    return {}
+    try:
+        return (await client.get(url)).raise_for_status().json()
+    except HTTPStatusError:
+        return {}
 
 
 def clean_version(version):
@@ -19,14 +20,14 @@ def clean_version(version):
     return "".join(version)
 
 
-def get_version(pypi_data, version, lt=False):
+async def get_version(pypi_data, version, lt=False):
     if not version:
         return None
 
     orig_ver = version
     releases = pypi_data["releases"]
     if version not in releases:
-        version_data = get_pypi_data(pypi_data["info"]["name"], version=version)
+        version_data = await get_pypi_data(pypi_data["info"]["name"], version=version)
         version = version_data.get("info", {}).get("version")
     if lt:
         releases = [
@@ -46,8 +47,8 @@ def get_version(pypi_data, version, lt=False):
     return version
 
 
-def get_no_of_releases(name, version):
-    pypi_data = get_pypi_data(name)
+async def get_no_of_releases(name, version):
+    pypi_data = await get_pypi_data(name)
     if not pypi_data:
         return None, None, None, None
 
@@ -56,17 +57,17 @@ def get_no_of_releases(name, version):
     return len(releases) - list(releases).index(version)
 
 
-def get_version_release_dates(name, version, version_lt):
-    pypi_data = get_pypi_data(name)
+async def get_version_release_dates(name, version, version_lt):
+    pypi_data = await get_pypi_data(name)
     if not pypi_data:
         return None, None, None, None
 
     releases = pypi_data["releases"]
     latest_version = pypi_data["info"]["version"]
     if version_lt:
-        version = get_version(pypi_data, version_lt, lt=True)
+        version = await get_version(pypi_data, version_lt, lt=True)
 
-    version = get_version(pypi_data, version)
+    version = await get_version(pypi_data, version)
     if version is None:
         return None, None, None, None
 
@@ -90,9 +91,9 @@ def get_version_release_dates(name, version, version_lt):
     return version, version_date, latest_version, latest_version_date
 
 
-def get_lib_days(name, version, version_lt):
+async def get_lib_days(name, version, version_lt):
     version, version_date, latest_version, latest_version_date = (
-        get_version_release_dates(name, version, version_lt)
+        await get_version_release_dates(name, version, version_lt)
     )
     libdays = (latest_version_date - version_date).days if version_date else 0
     return version, latest_version, libdays

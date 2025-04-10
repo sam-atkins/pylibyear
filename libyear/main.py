@@ -1,6 +1,8 @@
+import asyncio
 from typing import Optional
 
 import typer
+from httpx import AsyncClient
 from typing_extensions import Annotated
 
 from libyear.__about__ import __version__
@@ -17,6 +19,7 @@ from libyear.utils import (
 
 app = typer.Typer()
 
+client = AsyncClient(http2=True)
 
 def version_callback(value: bool):
     """
@@ -89,7 +92,7 @@ def render_results(json: str, sort: bool, requirements: set) -> None:
     """
     if json:
         validate_file_path(json)
-    data = calculate_results(requirements, sort)
+    data = asyncio.run(calculate_results(requirements, sort))
     if json:
         results_to_json(data=data, file_name=json)
     else:
@@ -97,4 +100,5 @@ def render_results(json: str, sort: bool, requirements: set) -> None:
 
 
 if __name__ == "__main__":
-    app()
+    with client:
+        app()

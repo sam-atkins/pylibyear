@@ -13,7 +13,7 @@ class Results:
     total_days: float
 
 
-def calculate_results(
+async def calculate_results(
     requirements: set,
     sort: bool = False,
 ):
@@ -32,7 +32,7 @@ def calculate_results(
         if not version and not version_lt:
             continue
 
-        v, lv, days = get_lib_days(name, version, version_lt)
+        v, lv, days = await get_lib_days(name, version, version_lt)
         if v and days > 0:
             pt.add_row([name, v, lv, str(round(days / 365, 2))])
         total_days += days
