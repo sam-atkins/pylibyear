@@ -4,7 +4,7 @@ from pathlib import Path
 
 import typer
 
-REQUIREMENT_NAME_RE = r"^([^=><]+)"
+REQUIREMENT_NAME_RE = r"^([^\[=><]+)"
 REQUIREMENT_VERSION_LT_RE = r"<([^$,]*)"
 REQUIREMENT_VERSION_LTE_RE = r"[<=]=([^$,]*)"
 

@@ -22,6 +22,7 @@ def test_gets_name_and_version_from_requirements_file_with_hashes():
     }
 
     assert ("appdirs", "1.4.3", None) in results
+    assert ("psycopg", "3.2.9", None) in results
 
 
 @pytest.mark.parametrize(
