@@ -7,3 +7,4 @@ pylibyear.egg-info
 .eggs
 
 .python-version
+libyear/_version.py
