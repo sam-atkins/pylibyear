@@ -11,7 +11,7 @@ The CLI entry point is `libyear` (defined in `pyproject.toml` → `[project.scri
 ## Setup
 
 ```bash
-uv pip install -r pyproject.toml --all-extras
+uv sync --all-extras
 uv pip install -e .
 ```
 
