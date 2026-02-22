@@ -4,14 +4,14 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "pylibyear"
-version = "0.3.4"
+version = "0.4.0"
 description = "A simple measure of software dependency freshness."
 readme = "README.md"
 requires-python = ">=3.11"
 license = {text = "MIT License"}
 keywords = []
 authors = [
-  { name = "Sam Atkins", email = "samatkins@outlook.com" },
+  { name = "Sam Atkins", email = "opensource.primary573@passfwd.com" },
   { name = "nasirhjafri" },
 ]
 classifiers = [
@@ -29,12 +29,14 @@ dependencies = [
     "typing-extensions>=4.15.0",
 ]
 
-[project.optional-dependencies]
+[dependency-groups]
 dev = [
-    "pytest>=8.2.0",
+    "pytest>=9.0.2",
     "pytest-vcr>=1.0.2",
-    "ruff>=0.4.4",
+    "ruff>=0.15.2",
+    "ty>=0.0.18",
 ]
+
 build = [
     "build==1.2.1",
 ]

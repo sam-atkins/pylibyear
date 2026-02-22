@@ -2,6 +2,7 @@ import dateutil.parser
 from httpx import HTTPStatusError
 from packaging.version import Version
 
+
 async def get_pypi_data(name, version=None):
     from .main import client
 
@@ -92,8 +93,11 @@ async def get_version_release_dates(name, version, version_lt):
 
 
 async def get_lib_days(name, version, version_lt):
-    version, version_date, latest_version, latest_version_date = (
-        await get_version_release_dates(name, version, version_lt)
-    )
+    (
+        version,
+        version_date,
+        latest_version,
+        latest_version_date,
+    ) = await get_version_release_dates(name, version, version_lt)
     libdays = (latest_version_date - version_date).days if version_date else 0
     return version, latest_version, libdays

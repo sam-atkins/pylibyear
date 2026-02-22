@@ -21,6 +21,7 @@ app = typer.Typer()
 
 client = AsyncClient(http2=True)
 
+
 def version_callback(value: bool):
     """
     Print the version of the application
@@ -100,5 +101,4 @@ def render_results(json: str, sort: bool, requirements: set) -> None:
 
 
 if __name__ == "__main__":
-    with client:
-        app()
+    app()
