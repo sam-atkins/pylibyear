@@ -44,5 +44,5 @@ build:
 [group('build')]
 release version:
     git tag -a v{{version}} -m "v{{version}}"
-    git push origin HEAD --tags
-    gh release create v{{version}} --generate-notes
+    git push origin v{{version}}
+    gh release create v{{version}} --generate-notes --repo sam-atkins/pylibyear
