@@ -1,10 +1,10 @@
 [build-system]
-requires = ["setuptools >= 61.0"]
-build-backend = "setuptools.build_meta"
+requires = ["hatchling"]
+build-backend = "hatchling.build"
 
 [project]
 name = "pylibyear"
-version = "0.4.0"
+version = "0.3.4"
 description = "A simple measure of software dependency freshness."
 readme = "README.md"
 requires-python = ">=3.11"
@@ -37,9 +37,8 @@ dev = [
     "ty>=0.0.18",
 ]
 
-build = [
-    "build==1.2.1",
-]
+[tool.hatch.build.targets.wheel]
+packages = ["libyear"]
 
 [project.scripts]
 libyear = "libyear.main:app"
