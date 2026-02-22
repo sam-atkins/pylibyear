@@ -40,17 +40,9 @@ build:
     rm -rf dist/**
     uv build
 
-# Bump the version in libyear/__about__.py
-[group('build')]
-bump:
-    python scripts/version_bump.py
-
-# Release a new version: update version, commit, tag, push, and create GitHub release
+# Release a new version: tag, push, and create GitHub release
 [group('build')]
 release version:
-    python scripts/version_bump.py {{version}}
-    git add pyproject.toml libyear/__about__.py
-    git commit -m "release v{{version}}"
     git tag -a v{{version}} -m "v{{version}}"
     git push origin HEAD --tags
     gh release create v{{version}} --generate-notes

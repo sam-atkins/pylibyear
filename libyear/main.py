@@ -1,11 +1,12 @@
 import asyncio
+from importlib.metadata import version
 from typing import Optional
 
 import typer
 from httpx import AsyncClient
 from typing_extensions import Annotated
 
-from libyear.__about__ import __version__
+__version__ = version("pylibyear")
 from libyear.results import (
     calculate_results,
     results_to_json,
