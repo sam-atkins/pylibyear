@@ -130,6 +130,80 @@ def test_libyear_main_output_to_json():
 
 
 @pytest.mark.vcr()
+def test_libyear_main_output_sort_and_json():
+    tmp_file = tempfile.NamedTemporaryFile()
+    requirements_path = str(Path(__file__).parent / "data" / "requirements.txt")
+    runner = CliRunner()
+    result = runner.invoke(
+        app,
+        [
+            "text",
+            requirements_path,
+            "--sort",
+            "--json",
+            tmp_file.name,
+        ],
+    )
+
+    assert result.exit_code == 0
+    with open(tmp_file.name, "r") as f:
+        data = json.loads(f.read())
+        assert data["total_libyears_behind"] == "233.04"
+        assert len(data["libraries"]) == 40
+
+
+@pytest.mark.vcr()
+def test_libyear_json_output_is_sorted_when_sort_flag_used():
+    tmp_file = tempfile.NamedTemporaryFile()
+    requirements_path = str(Path(__file__).parent / "data" / "requirements.txt")
+    runner = CliRunner()
+    result = runner.invoke(
+        app,
+        [
+            "text",
+            requirements_path,
+            "--sort",
+            "--json",
+            tmp_file.name,
+        ],
+    )
+
+    assert result.exit_code == 0
+    with open(tmp_file.name, "r") as f:
+        data = json.loads(f.read())
+        libyears = [float(lib["libyears_behind"]) for lib in data["libraries"]]
+        assert libyears == sorted(libyears, reverse=True)
+
+
+@pytest.mark.vcr()
+def test_libyear_json_output_without_sort_has_snake_case_keys():
+    tmp_file = tempfile.NamedTemporaryFile()
+    requirements_path = str(Path(__file__).parent / "data" / "requirements.txt")
+    runner = CliRunner()
+    result = runner.invoke(
+        app,
+        [
+            "text",
+            requirements_path,
+            "--json",
+            tmp_file.name,
+        ],
+    )
+
+    assert result.exit_code == 0
+    with open(tmp_file.name, "r") as f:
+        data = json.loads(f.read())
+        expected_keys = {
+            "library",
+            "current_version",
+            "latest_version",
+            "libyears_behind",
+        }
+        for lib in data["libraries"]:
+            assert set(lib.keys()) == expected_keys
+
+
+@pytest.mark.vcr()
 def test_json_output_creates_file_and_parent_directories():
     """
     GIVEN a requirements.txt file and a --json output path where neither
