@@ -14,6 +14,12 @@ https://libyear.com/
 
 ## How to install
 
+Using uvx
+
+```bash
+uvx --from pylibyear libyear --help
+```
+
 Using pip
 
 ```bash
@@ -120,4 +126,10 @@ Then run this command to install in editable mode for local development
 
 ```bash
 uv pip install -e .
+```
+
+Available `justfile` recipes:
+
+```bash
+just
 ```
