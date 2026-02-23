@@ -8,10 +8,10 @@ install:
     uv sync
     uv pip install -e .
 
-# Run libyear against a requirements file
+# Run libyear against a {type: text|toml} and {path} to a file
 [group('dev')]
-run path:
-    uv run libyear text {{path}}
+run type path:
+    uv run libyear {{type}} {{path}}
 
 # Lint and run tests
 [group('code quality')]
