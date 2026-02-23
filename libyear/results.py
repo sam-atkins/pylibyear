@@ -1,4 +1,5 @@
 import json
+import os
 from dataclasses import dataclass
 
 from prettytable import PrettyTable
@@ -96,5 +97,8 @@ def _write_to_json_file(data, file_name: str = "results.json"):
     Write the results to a JSON file
     """
     print(f"Writing results to {file_name}")
+    dir_name = os.path.dirname(file_name)
+    if dir_name:
+        os.makedirs(dir_name, exist_ok=True)
     with open(file_name, "w") as f:
         f.write(data)
