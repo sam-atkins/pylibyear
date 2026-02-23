@@ -127,3 +127,33 @@ def test_libyear_main_output_to_json():
         data = json.loads(json_data)
         assert data["total_libyears_behind"] == "233.04"
         assert len(data["libraries"]) == 40
+
+
+@pytest.mark.vcr()
+def test_json_output_creates_file_and_parent_directories():
+    """
+    GIVEN a requirements.txt file and a --json output path where neither
+          the file nor its parent directories exist
+    WHEN the text command is invoked with --json pointing to that path
+    THEN the parent directories and JSON file are created with valid output
+    """
+    with tempfile.TemporaryDirectory() as tmp_dir:
+        output_path = os.path.join(tmp_dir, "nested", "dir", "results.json")
+        requirements_path = str(Path(__file__).parent / "data" / "requirements.txt")
+        runner = CliRunner()
+        result = runner.invoke(
+            app,
+            [
+                "text",
+                requirements_path,
+                "--json",
+                output_path,
+            ],
+        )
+
+        assert result.exit_code == 0
+        assert os.path.exists(output_path)
+        with open(output_path, "r") as f:
+            data = json.loads(f.read())
+            assert "total_libyears_behind" in data
+            assert "libraries" in data
