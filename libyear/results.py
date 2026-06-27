@@ -18,7 +18,7 @@ _FIELD_NAME_MAP = {
 @dataclass
 class Results:
     table: PrettyTable
-    total_days: float
+    total_years: float
 
 
 async def calculate_results(
@@ -51,19 +51,18 @@ async def calculate_results(
 
     total_days = round(total_days / 365, 2)
 
-    result = Results(pt, total_days)
-    return result
+    return Results(pt, total_days)
 
 
 def results_to_stdout(data: Results):
     """
     Print the results to the console
     """
-    if data.total_days == 0.0:
+    if data.total_years == 0.0:
         print("Your system is up-to-date!")
     else:
         print(data.table)
-        print(f"Your system is {str(data.total_days)} libyears behind")
+        print(f"Your system is {str(data.total_years)} libyears behind")
 
 
 def results_to_json(data: Results, file_name: str):
@@ -71,7 +70,7 @@ def results_to_json(data: Results, file_name: str):
     Prepare the results in JSON format and write to a file
     """
     table = _prepare_data_for_file_output(
-        pretty_table=data.table, total_days=data.total_days
+        pretty_table=data.table, total_days=data.total_years
     )
     result = json.dumps(table, indent=4)
     _write_to_json_file(data=result, file_name=file_name)
